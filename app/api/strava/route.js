@@ -5,8 +5,8 @@ import {
   logRequest,
   refreshStravaToken,
   handleStravaReauthorizationError,
-  logNotionError,
-  logNotionItem,
+  // logNotionError,
+  // logNotionItem,
 } from '@/app/utils/stravaHelpers';
 import { getActivityById } from '@/app/utils/stravaUtils';
 import {
@@ -34,7 +34,7 @@ export async function DELETE(req) {
     }
 
     const body = new FormData();
-    body.append('client_id', process.env.CLIENT_ID);
+    body.append('client_id', process.env.NEXT_PUBLIC_CLIENT_ID);
     body.append('client_secret', process.env.CLIENT_SECRET);
     const requestOptions = {
       body,
@@ -55,7 +55,7 @@ export async function DELETE(req) {
   } catch (error) {
     handleStravaReauthorizationError(error);
     console.error('Error deleting Strava subscription:', error);
-    await logNotionError('Error deleting Strava subscription', error);
+    // await logNotionError('Error deleting Strava subscription', error);
     return NextResponse.json(
       { message: 'Error deleting Strava subscription.', details: error.message },
       { status: 500 }
@@ -84,7 +84,7 @@ export async function GET(req) {
     }
   } catch (error) {
     console.error('Error validating Strava subscription:', error);
-    await logNotionError('Error validating Strava subscription', error);
+    // await logNotionError('Error validating Strava subscription', error);
     return NextResponse.json(
       { message: 'Error validating Strava subscription.', details: error.message },
       { status: 500 }
@@ -102,11 +102,11 @@ export async function POST(req) {
 
     const body = await req.json();
     console.log('Webhook event received!', body);
-    await logNotionItem('Webhook Event', {
-      object_type: body?.object_type,
-      aspect_type: body?.aspect_type,
-      body: body,
-    });
+    // await logNotionItem('Webhook Event', {
+    //   object_type: body?.object_type,
+    //   aspect_type: body?.aspect_type,
+    //   body: body,
+    // });
 
     switch (body?.object_type) {
       case 'activity':
@@ -119,21 +119,27 @@ export async function POST(req) {
             await deleteNotionPage(body?.object_id);
             return NextResponse.json({ message: 'EVENT_RECEIVED' });
           default:
-            await logNotionError('Unexpected Strava aspect_type', {
+            console.warn('Unexpected Strava aspect_type', {
               aspect_type: body?.aspect_type,
-            });
+            })
+            // await logNotionError('Unexpected Strava aspect_type', {
+            //   aspect_type: body?.aspect_type,
+            // });
             return NextResponse.json({ message: 'EVENT_RECEIVED' });
         }
       default:
-        await logNotionError('Unexpected Strava object_type', {
+        console.warn('Unexpected Strava object_type', {
           object_type: body?.object_type,
-        });
+        })
+        // await logNotionError('Unexpected Strava object_type', {
+        //   object_type: body?.object_type,
+        // });
         return NextResponse.json({ message: 'EVENT_RECEIVED' });
     }
   } catch (error) {
     handleStravaReauthorizationError(error);
     console.error('Error processing Strava webhook event:', error);
-    await logNotionError('Error processing Strava webhook event', error);
+    // await logNotionError('Error processing Strava webhook event', error);
     return NextResponse.json(
       { message: 'Error processing Strava webhook event.', details: error.message },
       { status: 500 }
@@ -153,7 +159,8 @@ async function createWebhookEvent(body) {
 
     const formattedNotionObject = await fmtNotionObject(payload, true);
     if (!formattedNotionObject) {
-      await logNotionError('Error creating Notion page', 'Empty formatted notion object');
+      console.error('Error creating Notion page', 'Empty formatted notion object')
+      // await logNotionError('Error creating Notion page', 'Empty formatted notion object');
       return NextResponse.json({ message: 'EVENT_RECEIVED' });
     }
 
@@ -162,7 +169,7 @@ async function createWebhookEvent(body) {
   } catch (error) {
     handleStravaReauthorizationError(error);
     console.error('Error creating Strava webhook event:', error);
-    await logNotionError('Error creating Strava webhook event', error);
+    // await logNotionError('Error creating Strava webhook event', error);
     return NextResponse.json(
       { message: 'Error creating Strava webhook event.', details: error.message },
       { status: 500 }
@@ -186,7 +193,8 @@ async function updateWebhookEvent(body) {
     )?.id;
 
     if (!notionId) {
-      await logNotionItem('Update From Unknown Strava Activity', 'Creating new Notion page');
+      console.log('Update From Unknown Strava Activity', 'Creating new Notion page')
+      // await logNotionItem('Update From Unknown Strava Activity', 'Creating new Notion page');
       return await createWebhookEvent(body);
     }
 
@@ -195,7 +203,7 @@ async function updateWebhookEvent(body) {
   } catch (error) {
     handleStravaReauthorizationError(error);
     console.error('Error updating Strava webhook event:', error);
-    await logNotionError('Error updating Strava webhook event', error);
+    // await logNotionError('Error updating Strava webhook event', error);
     return NextResponse.json(
       { message: 'Error updating Strava webhook event.', details: error.message },
       { status: 500 }

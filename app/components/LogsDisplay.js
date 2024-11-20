@@ -12,7 +12,7 @@ const LogsDisplay = () => {
       setLoading(true);
       try {
         // const fetchedLogs = await getLogs(); // Assuming `getLogs` retrieves the logs from Notion
-        setLogs(null);
+        setLogs([]);
       } catch (error) {
         console.error('Failed to fetch logs:', error);
       } finally {

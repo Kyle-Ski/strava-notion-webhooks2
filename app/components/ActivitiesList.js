@@ -1,6 +1,6 @@
 "use client"
 import { useState, useEffect } from 'react';
-import { getAllActivities } from '../utils/stravaUtils';
+// import { getAllActivities } from '../utils/stravaUtils';
 
 const ActivitiesList = () => {
   const [activities, setActivities] = useState([]);
@@ -13,8 +13,8 @@ const ActivitiesList = () => {
 
       setLoading(true);
       try {
-        const fetchedActivities = await getAllActivities(token);
-        setActivities(fetchedActivities);
+        // const fetchedActivities = await getAllActivities(token);
+        // setActivities(fetchedActivities);
       } catch (error) {
         console.error('Failed to fetch activities:', error);
       } finally {

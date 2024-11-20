@@ -1,4 +1,4 @@
-import { handleStravaReauthorizationError, logRequest, logNotionError, logNotionItem } from './stravaHelpers';
+import { handleStravaReauthorizationError, logRequest} from './stravaHelpers';
 import strava from 'strava-v3';
 
 /**
@@ -25,7 +25,8 @@ export const getActivityById = async (id, token) => {
   } catch (e) {
     console.error(`Error getting Strava activity by id: ${id}, ERROR: ${e}`);
     await handleStravaReauthorizationError(e);
-    await logNotionError('Error Getting Strava Activity By Id', { id, error: e.message });
+    console.error('Error Getting Strava Activity By Id', { id, error: e.message })
+    // await logNotionError('Error Getting Strava Activity By Id', { id, error: e.message });
     return false;
   }
 };
@@ -54,7 +55,8 @@ export const getAllActivities = async (token, page = 1) => {
   } catch (e) {
     console.error('Error listing all Strava activities:', e);
     await handleStravaReauthorizationError(e);
-    await logNotionError('Error Getting All Strava Activities', { error: e.message });
+    console.error('Error Getting All Strava Activities', { error: e.message })
+    // await logNotionError('Error Getting All Strava Activities', { error: e.message });
     return false;
   }
 };

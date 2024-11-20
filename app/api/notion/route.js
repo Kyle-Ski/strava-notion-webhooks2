@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { logNotionError, logNotionItem, updateNotionPage } from '../../../../utils/notionUtils';
+import { updateNotionPage } from '../../../../utils/notionUtils';
 
 /**
  * Fallback function for the "notion/" route.
@@ -46,15 +46,17 @@ export async function POST(req) {
 
     let response;
     if (logTitle.includes("error")) {
-      response = await logNotionError(`TEST ERROR: ${logTitle}`, "Here's a test error log in Notion for you");
+      console.warn(`TEST ERROR: ${logTitle}`, "Here's a test error log in Notion for you")
+      // response = await logNotionError(`TEST ERROR: ${logTitle}`, "Here's a test error log in Notion for you");
+      response = true
       if (!response) {
         return NextResponse.json({ message: 'Error testing an error log to Notion.' }, { status: 500 });
       }
       console.log("Testing Notion Error Log", JSON.stringify(response));
       return NextResponse.json({ message: 'Test error log success!' });
     }
-
-    response = await logNotionItem(`TEST TITLE: ${logTitle}`, "Here's a test log in Notion for you");
+    console.log(`TEST TITLE: ${logTitle}`, "Here's a test log in Notion for you")
+    // response = await logNotionItem(`TEST TITLE: ${logTitle}`, "Here's a test log in Notion for you");
     if (!response) {
       return NextResponse.json({ message: 'Error testing a log to Notion.' }, { status: 500 });
     }
@@ -62,7 +64,7 @@ export async function POST(req) {
     return NextResponse.json({ message: 'Test log success!' });
   } catch (error) {
     console.error('Error testing Notion log:', error);
-    logNotionError('Error testing Notion log', error);
+    // logNotionError('Error testing Notion log', error);
     return NextResponse.json({ message: 'Error testing Notion log.', details: error.message }, { status: 500 });
   }
 }
@@ -83,7 +85,7 @@ export async function PUT(req) {
     return NextResponse.json({ message: 'Successfully tested updating Notion relations!' });
   } catch (error) {
     console.error('Error testing Notion relation update:', error);
-    logNotionError('Error testing Notion relation update', error);
+    // logNotionError('Error testing Notion relation update', error);
     return NextResponse.json({ message: 'Error testing Notion relation update.', details: error.message }, { status: 500 });
   }
 }

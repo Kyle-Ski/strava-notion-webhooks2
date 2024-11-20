@@ -1,8 +1,9 @@
 "use client"
 import { useState, useEffect } from 'react';
-import { generateStravaOAuthUrl } from '@/utils/stravaOauthURLgenerator';
+import { generateStravaOAuthUrl } from '../utils/stravaOauthURLgenerator';
 
 const StravaConnect = () => {
+  console.log("----->",process.env.NEXT_PUBLIC_CLIENT_ID)
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
@@ -12,7 +13,7 @@ const StravaConnect = () => {
   }, []);
 
   const handleConnect = () => {
-    const url = generateStravaOAuthUrl();
+    const url = generateStravaOAuthUrl(process.env.NEXT_PUBLIC_CLIENT_ID);
     window.location.href = url; // Redirect to Strava OAuth URL
   };
 

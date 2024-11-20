@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { checkTimeExpired } from './unitConversionUtils';
 import { responseBuilder } from './httpUtils';
-import { logNotionError, logNotionItem } from './notionUtils';
+// import { logNotionError, logNotionItem } from './notionUtils';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_KEY;
@@ -26,7 +26,7 @@ export const logRequest = (req) => {
  */
 export const fetchNewTokens = async (currentRefreshToken) => {
   const requestOptions = {
-    body: `client_id=${process.env.STRAVA_CLIENT_ID}&client_secret=${process.env.STRAVA_CLIENT_SECRET}&grant_type=refresh_token&refresh_token=${currentRefreshToken}`,
+    body: `client_id=${process.env.NEXT_PUBLIC_CLIENT_ID}&client_secret=${process.env.STRAVA_CLIENT_SECRET}&grant_type=refresh_token&refresh_token=${currentRefreshToken}`,
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
@@ -66,10 +66,11 @@ export const refreshStravaToken = async (userId) => {
       const newCreds = await fetchNewTokens(data.refresh_token);
       if (!newCreds?.status || !newCreds?.data || newCreds?.status !== 200) {
         console.error('Error refreshing the tokens...', JSON.stringify(newCreds));
-        await logNotionError('Error refreshing the tokens', newCreds);
+        // await logNotionError('Error refreshing the tokens', newCreds);
         throw new Error('Failed to refresh tokens.');
       }
-      await logNotionItem('Refresh Token Success', { message: 'Setting new creds' });
+      console.log('Refresh Token Success', { message: 'Setting new creds' })
+      // await logNotionItem('Refresh Token Success', { message: 'Setting new creds' });
 
       // Update Supabase with new tokens
       const { error: updateError } = await supabase
@@ -90,7 +91,7 @@ export const refreshStravaToken = async (userId) => {
     }
   } catch (error) {
     console.error('Error refreshing Strava token:', error);
-    await logNotionError('Error refreshing Strava token', { userId, error: error.message });
+    // await logNotionError('Error refreshing Strava token', { userId, error: error.message });
     throw new Error('Error refreshing Strava token.');
   }
 };

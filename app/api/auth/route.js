@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import fetch from 'node-fetch';
-import { logNotionError } from '../../../utils/notionUtils';
+// import { logNotionError } from '../../../utils/notionUtils';
 import supabase from '@/app/utils/supabaseClient';
 
 /**
@@ -15,7 +15,7 @@ export async function POST(req) {
     }
 
     const bodyParams = new URLSearchParams({
-      client_id: process.env.CLIENT_ID,
+      client_id: process.env.NEXT_PUBLIC_CLIENT_ID,
       client_secret: process.env.CLIENT_SECRET,
       code: code,
       grant_type: 'authorization_code',
@@ -55,7 +55,7 @@ export async function POST(req) {
     });
   } catch (error) {
     console.error('Error exchanging tokens with Strava API:', error);
-    logNotionError('Error exchanging tokens with Strava', error);
+    // logNotionError('Error exchanging tokens with Strava', error);
     return NextResponse.json({
       message: 'Error exchanging tokens with Strava API.',
       details: error.message,

@@ -1,6 +1,6 @@
 import { Client, LogLevel } from "@notionhq/client";
 import {
-  celciusToF,
+  celsiusToF,
   dateToDayOfWeek,
   metersPerSecToMph,
   metersToFeet,
@@ -97,7 +97,7 @@ export const fmtNotionObject = async (stravaObject, shouldAddRelations = false) 
           rich_text: [
             {
               text: {
-                content: `${celciusToF(stravaObject[key])}°F | ${stravaObject[key]}°C`,
+                content: `${celsiusToF(stravaObject[key])}°F | ${stravaObject[key]}°C`,
               },
             },
           ],
@@ -161,7 +161,7 @@ export const addNotionItem = async (itemToAdd) => {
     console.log("Success! Notion Entry added.");
     return response;
   } catch (error) {
-    logNotionError("Error creating page with Notion SDK", error);
+    // logNotionError("Error creating page with Notion SDK", error);
     console.error(`Error creating page with Notion SDK: ${error}`);
     return false;
   }
@@ -182,7 +182,7 @@ export const updateNotionPage = async (notionId, updateObject) => {
     return response;
   } catch (error) {
     console.error(`Error updating Notion page with ID ${notionId}:`, error);
-    logNotionError("Error attempting to update Notion Page", error);
+    // logNotionError("Error attempting to update Notion Page", error);
     return false;
   }
 };
